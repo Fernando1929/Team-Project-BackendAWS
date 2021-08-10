@@ -21,7 +21,7 @@ CREATE TABLE locations (location_id serial primary key, user_id integer referenc
 CREATE TABLE faction (faction_id serial primary key, faction_name varchar(20), faction_population integer, faction_rating varchar(20), faction_wealth varchar(50),
 faction_territory char(10));
 
-##Relationships tables
+--Relationships tables
 
 CREATE TABLE represents (faction_id integer references faction(faction_id), leader_id integer references
 faction_leader(leader_id), primary key (faction_id, leader_id));
@@ -36,7 +36,7 @@ CREATE TABLE has (resource_id integer references resources(resource_id), faction
 faction(faction_id), primary key (resource_id, faction_id));
 
 
-##Resources
+--Resources
 
 CREATE TABLE resources (resource_id serial primary key, resource_name varchar(50), resource_availability boolean);
 
