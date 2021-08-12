@@ -29,39 +29,39 @@ def greeting():
 
 ## translate to handler and dao
 # Register function 
-@app.route("/register", methods = ['POST'])
-def register():
+# @app.route("/register", methods = ['POST'])
+# def register():
 
-    # Connect database
-    conn = mysql.connect()
-    cursor = conn.cursor()
+#     # Connect database
+#     conn = mysql.connect()
+#     cursor = conn.cursor()
 
-    # Read data from GUI
-    data = request.get_json()["newUser"]
+#     # Read data from GUI
+#     data = request.get_json()["newUser"]
     
-    # Saving values
-    username = data['username']
-    password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
-    status = "new"
+#     # Saving values
+#     username = data['username']
+#     password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
+#     status = "new"
 
-    # Check if the username is taken 
-    query = "SELECT * from users where username = %s"
-    cursor.execute(query,(username))
-    result = cursor.fetchone()
+#     # Check if the username is taken 
+#     query = "SELECT * from users where username = %s"
+#     cursor.execute(query,(username))
+#     result = cursor.fetchone()
 
-    print(result)
+#     print(result)
 
-    if(result == None):
-        # Save the user in the database
-        query="INSERT INTO users (username, password, status) VALUES(%s, %s, %s)"
-        cursor.execute(query,(username, password, status))
+#     if(result == None):
+#         # Save the user in the database
+#         query="INSERT INTO users (username, password, status) VALUES(%s, %s, %s)"
+#         cursor.execute(query,(username, password, status))
 
-        conn.commit()
+#         conn.commit()
 
-        return jsonify({'status': 'Registered'}), 200
+#         return jsonify({'status': 'Registered'}), 200
 
-    else:
-        return jsonify({'msg': '*The username already exist.'}), 400
+#     else:
+#         return jsonify({'msg': '*The username already exist.'}), 400
 
 
 # # Login function
@@ -101,9 +101,9 @@ def register():
 
 ################################## Credentials routes ##################################
 
-@app.route("/login", methods=['POST'])
+@app.route("/register", methods=['POST'])
 def addlogin():
-    return CredentialsHandler().insertLogin(request.json)
+    return CredentialsHandler().insertCredentials(request.json)
 
 @app.route("/login/<int:cred_id>", methods=['GET', 'PUT'])
 def getLoginById(cred_id):
@@ -125,84 +125,109 @@ def getLoginByUserId(user_id):
 
 ################################## Location routes ##################################
 @app.route("/user/location", methods=['GET', 'POST'])
-def getAllAddresses():
+def getAllLocations():
     if request.method == 'POST':
-        return Location_Handler().insertAddress(request.json)
+        return LocationHandler().insertLocation(request.json)
     else:
         if not request.args:
-            return Location_Handler().getAllAddresses()
+            return LocationHandler().getAllLocations()
         else:
-            return Location_Handler().searchAddresses(request.args)
+            return LocationHandler().searchLocations(request.args)
 
 @app.route("/user/location/<int:location_id>", methods=['GET', 'PUT', 'DELETE'])
-def getAddressById(location_id):
+def getLocationById(location_id):
     if request.method == 'GET':
-        return Location_Handler().getAddressById(location_id)
+        return LocationHandler().getLocationById(location_id)
     elif request.method == 'PUT':
-        return Location_Handler().updateAddress(location_id, request.json)
+        return LocationHandler().updateLocation(location_id, request.json)
     elif request.method == 'DELETE':
-        return Location_Handler().deleteAddress(location_id)
+        return LocationHandler().deleteLocation(location_id)
     else:
         return jsonify(Error="Method not allowed."), 405
 
 @app.route("/user/<int:user_id>/location", methods=['GET'])
-def getAddressesByUserId(user_id):
-    return Location_Handler().getAddressesByUserId(user_id)
+def getLocationsByUserId(user_id):
+    return LocationHandler().getLocationByUserId(user_id)
 
 ################################## Location routes ##################################
 
 ################################## Survivor routes ##################################
 
-@app.route("/DRL/register/Survivor", methods=['POST'])
+@app.route("/register/survivor", methods=['POST'])
 def registerSurvivor():
-    return Survivor_Handler().insertSurvivor(request.json)
+    return SurvivorHandler().insertSurvivor(request.json)
 
-@app.route("/DRL/Survivor", methods=['GET'])
+@app.route("/survivor", methods=['GET'])
 def getAllSurvivors():
     if not request.args:
-        return Survivor_Handler().getAllSurvivors()
+        return SurvivorHandler().getAllSurvivors()
     else:
-        return Survivor_Handler().searchSurvivors(request.args)
+        return SurvivorHandler().searchSurvivors(request.args)
 
-@app.route('/DRL/Survivor/<int:Survivor_id>', methods=['GET', 'PUT', 'DELETE'])
-def getSurvivorById(Survivor_id):
+@app.route('/survivor/<int:survivor_id>', methods=['GET', 'PUT', 'DELETE'])
+def getSurvivorById(survivor_id):
     if request.method == 'GET':
-        return Survivor_Handler().getSurvivorById(Survivor_id)
+        return SurvivorHandler().getSurvivorById(survivor_id)
     elif request.method == 'PUT':
-        return Survivor_Handler().updateSurvivor(Survivor_id, request.json)
+        return SurvivorHandler().updateSurvivor(survivor_id, request.json)
     elif request.method == 'DELETE':
-        return Survivor_Handler().deleteSurvivor(Survivor_id)
+        return SurvivorHandler().deleteSurvivor(survivor_id)
     else:
         return jsonify(Error="Method not allowed."), 405
 
 ################################## Survivor routes ##################################
 
+################################## Leader routes ##################################
+@app.route("/register/leader", methods=['POST'])
+def registerLeader():
+    return SurvivorHandler().insertLeader(request.json)
+
+@app.route("/leader", methods=['GET'])
+def getAllLeaders():
+    if not request.args:
+        return LeaderHandler().getAllLeader()
+    else:
+        return LeaderHandler().searchLeaders(request.args)
+
+@app.route('/leader/<int:leader_id>', methods=['GET', 'PUT', 'DELETE'])
+def getLeaderById(leader_id):
+    if request.method == 'GET':
+        return LeaderHandler().getLeaderById(leader_id)
+    elif request.method == 'PUT':
+        return LeaderHandler().updateLeader(leader_id, request.json)
+    elif request.method == 'DELETE':
+        return LeaderHandler().deleteLeader(leader_id)
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+################################## Leader routes ##################################
+
 ################################## Faction routes ##################################
 
-@app.route('/DRL/company', methods = ['GET','POST'])
-def getAllCompanies():
+@app.route('/factions', methods = ['GET','POST'])
+def getAllFactions():
     if request.method == 'POST':
-        return CompanyHandler().insertCompany(request.json)
+        return FactionHandler().insertFaction(request.json)
     else :
         if not request.args:
-            return CompanyHandler().getAllCompanies()
+            return FactionHandler().getAllFactions()
         else:
-            return CompanyHandler().searchCompany(request.args)
+            return FactionHandler().searchFaction(request.args)
 
-@app.route('/DRL/company/<int:company_id>', methods = ['GET','PUT','DELETE'])
-def getCompanyById(company_id):
+@app.route('/faction/<int:faction_id>', methods = ['GET','PUT','DELETE'])
+def getFactionById(faction_id):
     if request.method == 'GET':
-        return CompanyHandler().getCompanyById(company_id)
+        return FactionHandler().getFactionById(faction_id)
     elif request.method == 'PUT':
-        return CompanyHandler().updateCompany(company_id, request.json)
+        return FactionHandler().updateFaction(faction_id, request.json)
     elif request.method == 'DELETE':
-        return CompanyHandler().deleteCompany(company_id)
+        return FactionHandler().deleteFaction(faction_id)
     else:
         return jsonify(Error = "Method not allowed"), 405
 
-@app.route('/DRL/supplier/<int:supplier_id>/company', methods = ['GET'])
-def getCompanyBySupplierId(supplier_id):
-    return CompanyHandler().getCompanyBySupplierId(supplier_id)
+@app.route('/faction_leader/<int:faction_leader_id>/faction', methods = ['GET'])
+def getFactionByLeaderId(faction_leader_id):
+    return FactionHandler().getFactionByLeaderId(faction_leader_id)
 
 ################################## Faction routes ##################################
 

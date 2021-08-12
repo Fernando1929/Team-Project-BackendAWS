@@ -40,8 +40,8 @@ class CredentialsHandler:
             if not row:
                 return jsonify(Error = "Credentials Not Found"), 404
             else:
-                login = self.build_cred_dict(row)
-                return jsonify(Credentials = login)
+                cred = self.build_cred_dict(row)
+                return jsonify(Credentials = cred)
 
     def insertCredentials(self, json):
         user_id = json["user_id"]
@@ -51,17 +51,17 @@ class CredentialsHandler:
         cred_dao = CredentialsDAO()
         user_dao = UserDAO()
         
-        if not user_dao.getUserById(user_id):
-            return jsonify(Error = "User not found."), 404
-        elif cred_dao.getCredentialsByUserId(user_id):
-            return jsonify(Error = "Credentials for this user already exists"), 409
-        else:        
-            if user_id and username and password:
-                cred_id = cred_dao.insert(user_id, username, password)
-                result = self.build_cred_attributes(cred_id, user_id, username, password)
-                return jsonify(Credentials = result), 201
-            else:
-                return jsonify(Error = "Unexpected attributes in post request"), 400
+        # if not user_dao.getUserById(user_id):
+        #     return jsonify(Error = "User not found."), 404
+        # elif cred_dao.getCredentialsByUserId(user_id):
+        #     return jsonify(Error = "Credentials for this user already exists"), 409
+        # else:        
+        if user_id and username and password:
+            cred_id = cred_dao.insert(user_id, username, password)
+            result = self.build_cred_attributes(cred_id, user_id, username, password)
+            return jsonify(Credentials = result), 201
+        else:
+            return jsonify(Error = "Unexpected attributes in post request"), 400
 
     def updateCredentials(self, cred_id, json):
         cred_dao = CredentialsDAO()
