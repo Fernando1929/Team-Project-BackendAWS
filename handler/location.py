@@ -6,7 +6,6 @@ class LocationHandler:
 
     def build_location_dict(self, row):
         result = {}
-        result['location_id'] = row[0]
         result['user_id'] = row[1]
         result['city'] = row[2]
         result['state_province'] = row[3]
@@ -33,10 +32,10 @@ class LocationHandler:
         dao = LocationDAO()
         row = dao.getLocationById(location_id)
         if not row:
-            return jsonify(Error = "Address Not Found"), 404
+            return jsonify(Error = "Location Not Found"), 404
         else:
             location = self.build_location_dict(row)
-            return jsonify(Address = location)
+            return jsonify(Location = location)
 
     def getLocationByUserId(self, user_id):
         user_dao = UserDAO()
@@ -46,10 +45,10 @@ class LocationHandler:
             dao = LocationDAO()
             row = dao.getLocationByUserId(user_id)
             if not row:
-                return jsonify(Error = "Address Not Found"), 404
+                return jsonify(Error = "Location Not Found"), 404
             else:
                 location = self.build_location_dict(row)
-                return jsonify(Address = location)
+                return jsonify(Location = location)
 
 
     def searchLocations(self, args):
@@ -78,30 +77,26 @@ class LocationHandler:
             result_list.append(result)
         return jsonify(Locations = result_list)
 
-    def insertAddress(self, json):
+    def insertLocation(self, json):
         user_id = json["user_id"]
-        locationline = json["locationline"]
         city = json["city"]
         state_province = json["state_province"]
-        country = json["country"]
-        zipcode = json["zipcode"]
-
         user_dao = UserDAO()
         if not user_dao.getUserById(user_id):
             return jsonify(Error = "User not found."), 404
         else:
-            if user_id and locationline and city and state_province and country and zipcode:
+            if user_id and city and state_province:
                 Locaction_DAO = LocationDAO()
-                location_id = Locaction_DAO.insert(user_id, locationline, city, state_province, country, zipcode)
-                result = self.build_location_attributes(location_id, user_id, locationline, city, state_province, country, zipcode)
-                return jsonify(Address = result), 201
+                location_id = Locaction_DAO.insert(user_id, city, state_province)
+                result = self.build_location_attributes(location_id, user_id, city, state_province)
+                return jsonify(Location = result), 201
             else:
                 return jsonify(Error = "Unexpected attributes in post request"), 400
 
-    def updateAddress(self, location_id, json):
+    def updateLocation(self, location_id, json):
         Locaction_DAO = LocationDAO()
         if not Locaction_DAO.getLocationById(location_id):
-            return jsonify(Error = "Address not found."), 404
+            return jsonify(Error = "Location not found."), 404
         else:
             user_id = json["user_id"]
             locationline = json["locationline"]
@@ -114,14 +109,14 @@ class LocationHandler:
                 Locaction_DAO = LocationDAO()
                 location_id = Locaction_DAO.update(location_id, user_id, locationline, city, state_province, country, zipcode)
                 result = self.build_location_attributes(location_id, user_id, locationline, city, state_province, country, zipcode)
-                return jsonify(Address = result), 200
+                return jsonify(Location = result), 200
             else:
                 return jsonify(Error = "Unexpected attributes in update request"), 400
 
-    def deleteAddress(self, location_id):
+    def deleteLocation(self, location_id):
         Locaction_DAO = LocationDAO()
         if not Locaction_DAO.getLocationById(location_id):
-            return jsonify(Error = "Address not found."), 404
+            return jsonify(Error = "Location not found."), 404
         else:
             Locaction_DAO.delete(location_id)
             return jsonify(DeleteStatus = "OK"), 200

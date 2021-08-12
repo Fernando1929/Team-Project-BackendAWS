@@ -65,7 +65,7 @@ class SurvivorDAO:
 
     def insert(self, user_id):
         cursor = self.cnx.cursor()
-        query = "insert into survivor(user_id) values (%s) returning survivorid;"
+        query = "insert into survivor(user_id) values (%s)"
         cursor.execute(query, (user_id,))
         query = "SELECT LAST_INSERT_ID()"
         cursor.execute(query)

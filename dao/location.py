@@ -16,7 +16,6 @@ class LocationDAO:
         query = "SELECT location_id, user_id, city, state_province FROM locations"
         cursor.execute(query)
         result = []
-        
         for row in cursor:
             result.append(row)
         print(result)
@@ -36,10 +35,10 @@ class LocationDAO:
         result = cursor.fetchone()
         return result
 
-    def insert(self, user_id, addressline, city, state_province, country, zipcode):
+    def insert(self, user_id, city, state_province):
         cursor = self.cnx.cursor()
-        query = "INSERT INTO address (user_id, addressline, city, state_province, country, zipcode) VALUES (%s, %s, %s, %s, %s, %s) RETURNING address_id"
-        cursor.execute(query, (user_id, addressline, city, state_province, country, zipcode))
+        query = "INSERT INTO locations(user_id, city, state_province) VALUES (%s, %s, %s)"
+        cursor.execute(query, (user_id, city, state_province))
         query = "SELECT LAST_INSERT_ID()"
         cursor.execute(query)
         location_id = cursor.fetchone()[0]

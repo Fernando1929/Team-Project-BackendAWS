@@ -48,16 +48,16 @@ class FactionsDAO:
 
     def getFactionByLeaderId(self, leader_id):
         cursor = self.cnx.cursor()
-        query = "Select faction_id, faction_name, faction_population, faction_rating, faction_wealth, faction_territory from faction Natural Join faction_leader where leader_id = %s"
+        query = "Select faction_id, faction_name, faction_population, faction_rating, faction_wealth, faction_territory, leader_id from faction Natural Join faction_leader where leader_id = %s"
         cursor.execute(query,(leader_id,))
         result = cursor.fetchone()
         return result
 
-    def insert(self, faction_name, faction_address, faction_phone):
+    def insert(self, leader_id, faction_name, faction_population, faction_rating, faction_wealth, faction_territory):
         cursor = self.cnx.cursor()
-        query = "insert into faction(faction_name, faction_population, faction_rating, faction_wealth, faction_territory) values(%s,%s,%s) returning faction_id"
-        cursor.execute(query,(faction_name, faction_address, faction_phone))
-        query = "SELECT LAST_INSERT_ID()"
+        query = "insert into faction (leader_id, faction_name, faction_population, faction_rating, faction_wealth, faction_territory) values(%s,%s,%s,%s,%s,%s)"
+        cursor.execute(query,(leader_id, faction_name, faction_population, faction_rating, faction_wealth, faction_territory,))
+        query = "SELECT LAST_INSERT_ID()" 
         cursor.execute(query)
         faction_id = cursor.fetchone()[0]
         self.cnx.commit()
