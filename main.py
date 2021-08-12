@@ -133,11 +133,13 @@ def getLoginByUserId(user_id):
 def getAllLocations():
     if request.method == 'POST':
         return LocationHandler().insertLocation(request.json)
-    else:
+    elif request.method == 'GET':
         if not request.args:
             return LocationHandler().getAllLocations()
         else:
             return LocationHandler().searchLocations(request.args)
+    else:
+        return jsonify(Error="Method not allowed."), 405
 
 @app.route("/user/location/<int:location_id>", methods=['GET', 'PUT', 'DELETE'])
 def getLocationById(location_id):
@@ -350,7 +352,7 @@ def getClothById(cloth_id):
     else:
         return jsonify(Error = "Method not allowed"), 405
 
-@app.route('/DRL/resource/cloth', methods = ['POST'])
+@app.route('/DRL/resource/cloth', methods = ['POST', 'GET'])
 def addCloth():
     if request.method == 'POST':
         if request.json:
@@ -365,7 +367,7 @@ def addCloth():
 ################################## Cloth routes ##################################
 
 ################################## Medicine routes ##################################
-@app.route('/DRL/resource/med/<int:med_id>', methods = ['GET','POST','DELETE', 'PUT'])
+@app.route('/DRL/resource/med/<int:med_id>', methods = ['GET','DELETE', 'PUT'])
 def getMedById(med_id):
     if request.method == 'GET':
         return Med().getMed(med_id)
