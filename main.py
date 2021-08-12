@@ -11,6 +11,12 @@ from handler.survivor import SurvivorHandler
 from handler.faction import FactionHandler
 from handler.location import LocationHandler
 from handler.leader import LeaderDAO
+from handler.resources import Resource
+from handler.fuel import Fuel
+from handler.food import Food
+from handler.water import Water
+from handler.cloth import Cloth
+from handler.medicine import Med
 
 
 app = Flask(__name__)
@@ -229,6 +235,159 @@ def getFactionByLeaderId(faction_leader_id):
     return FactionHandler().getFactionByLeaderId(faction_leader_id)
 
 ################################## Faction routes ##################################
+
+################################## Resources routes ##################################
+@app.route('/DRL/resource/<int:resource_id>', methods = ['GET','DELETE', 'PUT'])
+def getResourceById(resource_id):
+    if request.method == 'GET':
+        return Resource().getResource(resource_id)
+    elif request.method == 'PUT':
+        return Resource().updateResource(request.json, resource_id)
+    elif request.method == 'DELETE':
+        return Resource().deleteResource(resource_id)
+    else:
+        return jsonify(Error = "Method not allowed"), 405
+    
+@app.route('/DRL/resource', methods = ['POST', 'GET'])
+def addResource():
+    if request.method == 'POST':
+        if request.json:
+            return Resource().createResource(request.json)
+        else:
+            return jsonify(Error="No attributes were provided."), 404
+    elif request.method == 'GET':
+        return Resource().getAllResources()
+    else:
+        return jsonify(Error = "Method not allowed"), 405
+################################## Resources routes ##################################
+
+################################## Fuel routes ##################################
+@app.route('/DRL/resource/fuel/<int:fuel_id>', methods = ['GET','POST','DELETE', 'PUT'])
+def getFuelById(fuel_id):
+    if request.method == 'GET':
+        return Fuel().getFuel(fuel_id)
+    elif request.method == 'POST':
+        return Fuel().createFuel(request.json)
+    elif request.method == 'PUT':
+        return Fuel().changeFuelQuantity(request.json, fuel_id)
+    elif request.method == 'DELETE':
+        return Fuel().deleteFuel(fuel_id)
+    else:
+        return jsonify(Error = "Method not allowed"), 405
+
+@app.route('/DRL/resource/fuel', methods = ['POST', 'GET'])
+def addFuel():
+    if request.method == 'POST':
+        if request.json:
+            return Fuel().createFuel(request.json)
+        else:
+            return jsonify(Error="No attributes were provided."), 404
+    elif request.method == 'GET':
+        return Fuel().getAllFuel()
+    else:
+        return jsonify(Error = "Method not allowed"), 405
+################################## Fuel routes ##################################
+
+################################## Food routes ##################################
+@app.route('/DRL/resource/food/<int:food_id>', methods = ['GET','DELETE', 'PUT'])
+def getFoodById(food_id):
+    if request.method == 'GET':
+        return Food().getFood(food_id)
+    elif request.method == 'PUT':
+        return Food().changeFoodQuantity(request.json, food_id)
+    elif request.method == 'DELETE':
+        return Food().deleteFood(food_id)
+    else:
+        return jsonify(Error = "Method not allowed"), 405
+
+@app.route('/DRL/resource/food', methods = ['POST', 'GET'])
+def addFood():
+    if request.method == 'POST':
+        if request.json:
+            return Food().createFood(request.json)
+        else:
+            return jsonify(Error="No attributes were provided."), 404
+    elif request.method == 'GET':
+        return Food().getAllFood()
+    else:
+        return jsonify(Error = "Method not allowed"), 405
+################################## Food routes ##################################
+
+################################## Water routes ##################################
+@app.route('/DRL/resource/water/<int:water_id>', methods = ['GET','DELETE', 'PUT'])
+def getWaterById(water_id):
+    if request.method == 'GET':
+        return Water().getWater(water_id)
+    elif request.method == 'PUT':
+        return Water().changeWaterQuantity(request.json, water_id)
+    elif request.method == 'DELETE':
+        return Water().deleteWater(water_id)
+    else:
+        return jsonify(Error = "Method not allowed"), 405
+
+@app.route('/DRL/resource/water', methods = ['POST', 'GET'])
+def addWater():
+    if request.method == 'POST':
+        if request.json:
+            return Water().createWater(request.json)
+        else:
+            return jsonify(Error="No attributes were provided."), 404
+    elif request.method == 'GET':
+        return Water().getAllWater()
+    else:
+        return jsonify(Error = "Method not allowed"), 405
+################################## Water routes ##################################
+
+################################## Cloth routes ##################################
+@app.route('/DRL/resource/cloth/<int:cloth_id>', methods = ['GET','DELETE', 'PUT'])
+def getClothById(cloth_id):
+    if request.method == 'GET':
+        return Cloth().getCloth(cloth_id)
+    elif request.method == 'PUT':
+        return Cloth().updateCloth(request.json, cloth_id)
+    elif request.method == 'DELETE':
+        return Cloth().deleteCloth(cloth_id)
+    else:
+        return jsonify(Error = "Method not allowed"), 405
+
+@app.route('/DRL/resource/cloth', methods = ['POST'])
+def addCloth():
+    if request.method == 'POST':
+        if request.json:
+            return Cloth().createCloth(request.json)
+        else:
+            return jsonify(Error="No attributes were provided."), 404
+    elif request.method == 'GET':
+        return Cloth().getAllCloth()
+    else:
+        return jsonify(Error = "Method not allowed"), 405
+
+################################## Cloth routes ##################################
+
+################################## Medicine routes ##################################
+@app.route('/DRL/resource/med/<int:med_id>', methods = ['GET','POST','DELETE', 'PUT'])
+def getMedById(med_id):
+    if request.method == 'GET':
+        return Med().getMed(med_id)
+    elif request.method == 'PUT':
+        return Med().changeMedicineQuantity(request.json, med_id)
+    elif request.method == 'DELETE':
+        return Med().deleteMed(med_id)
+    else:
+        return jsonify(Error = "Method not allowed"), 405
+
+@app.route('/DRL/resource/med', methods = ['POST', 'GET'])
+def addMed():
+    if request.method == 'POST':
+        if request.json:
+            return Med().createMed(request.json)
+        else:
+            return jsonify(Error="No attributes were provided."), 404
+    elif request.method == 'GET':
+        return Med().getAllMed()
+    else:
+        return jsonify(Error = "Method not allowed"), 405
+################################## Medicine routes ##################################
 
 if __name__ == '__main__':
     app.run(debug=True)

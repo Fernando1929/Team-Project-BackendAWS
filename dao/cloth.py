@@ -3,6 +3,7 @@ import mysql.connector
 
 
 class ClothDAO:
+
     def __init__(self):
         self.cnx = mysql.connector.connect(
             user = mysql_config['DB_USERNAME'], 
@@ -11,9 +12,10 @@ class ClothDAO:
             database = mysql_config['DB_DATABASE']
         )
 
+
     def get_all_cloth(self):
         cursor = self.cnx.cursor()
-        query = "select cloth_type, cloth_quantity from cloth "
+        query = "select resource_id, cloth_type, cloth_quantity from cloth;"
         cursor.execute(query)
         result = []
         for row in cursor:
@@ -22,37 +24,32 @@ class ClothDAO:
 
     def get_cloth_by_id(self, c_id):
         cursor = self.cnx.cursor()
-        query = "select cloth_type, cloth_quantity from cloth where cloth_id = %s "
+        query = "select resource_id, cloth_type, cloth_quantity from cloth where cloth_id = %s;"
         cursor.execute(query, (c_id,))
         result = cursor.fetchone()
         return result
 
-    def insert_cloth(self, r_id, cloth_category, cloth_quantity, cloth_type):
+    def insert_cloth(self, r_id, cloth_type, cloth_quantity):
         cursor = self.cnx.cursor()
-        query = "insert into cloth (resource_id, cloth_category, cloth_quantity, cloth_type) values (%s,%s,%s,%s) "
-        cursor.execute(query, (r_id, cloth_category, cloth_quantity, cloth_type,))
+        query = "insert into cloth (resource_id, cloth_type, cloth_quantity ) values (%s,%s,%s);"
+        cursor.execute(query, (r_id, cloth_type, cloth_quantity,))
+        query = "SELECT LAST_INSERT_ID()"
+        cursor.execute(query)
         cloth_id = cursor.fetchone()[0]
         self.cnx.commit()
         return cloth_id
-
-    def change_cloth_quantity(self, cloth_quantity, c_id):
-        cursor = self.cnx.cursor()
-        ##add check to verify if the resource even exists.
-        query = "update cloth set cloth_quantity=%s where cloth_id=%s "
-        cursor.execute(query, (cloth_quantity, c_id))
-        self.cnx.commit()
-        return c_id
-
-    def get_cloth_quantity(self, c_id):
-        cursor = self.cnx.cursor()
-        query = "select cloth_quantity from cloth where cloth_id = %s "
-        cursor.execute(query, (c_id,))
-        result = cursor.fetchone()
-        return result
     
     def update_cloth(self, cloth_type, cloth_quantity, c_id):
         cursor = self.cnx.cursor()
-        query = "update cloth set cloth_type=%s, cloth_quantity=%s where cloth_id=%s "
+        query = "update cloth set cloth_type=%s, cloth_quantity=%s where cloth_id=%s;"
         cursor.execute(query, cloth_type, cloth_quantity, c_id)
         self.cnx.commit()
         return c_id
+    
+    def delete_cloth(self, c_id):
+        cursor = self.cnx.cursor()
+        query =  "delete from cloth where cloth_id = %s;"
+        cursor.execute(query, (c_id,))
+        cloth_id = cursor.fetchone()[0]
+        self.cnx.commit()
+        return cloth_id

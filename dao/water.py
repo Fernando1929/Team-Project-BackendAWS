@@ -13,7 +13,7 @@ class WaterDAO:
 
     def get_all_water(self):
         cursor = self.cnx.cursor()
-        query = "select water_quantity, water_container, water_type from water"
+        query = "select resource_id, water_quantity, water_container, water_type from water"
         cursor.execute(query)
         result = []
         for row in cursor:
@@ -22,14 +22,13 @@ class WaterDAO:
 
     def get_water_by_id(self, w_id):
         cursor = self.cnx.cursor()
-        query = "select water_quantity, water_container, water_type from water where water_id = %s"
+        query = "select resource_id, water_quantity, water_container, water_type from water where water_id = %s"
         cursor.execute(query, (w_id,))
         result = cursor.fetchone()
         return result
 
     def insert_water(self, r_id, water_quantity, water_container, water_type):
         cursor = self.cnx.cursor()
-        ##check if water already exists
         query = "insert into water (resource_id, water_quantity, water_container, water_type) values (%s,%s,%s,%s)"
         cursor.execute(query, (r_id, water_quantity, water_container, water_type))
         query = "SELECT LAST_INSERT_ID()"
@@ -46,11 +45,10 @@ class WaterDAO:
         self.cnx.commit()
         return w_id
     
-    def get_water_by_type(self, water_type):
+    def delete_water(self, w_id):
         cursor = self.cnx.cursor()
-        ##add check to verify if the resource even exists.
-        query = "select * from water where water_type=%s"
-        cursor.execute(query, (water_type,))
-        result = cursor.fetchone()
-        return result
-    
+        query =  "delete from water where water_id = %s;"
+        cursor.execute(query, (w_id,))
+        water_id = cursor.fetchone()[0]
+        self.cnx.commit()
+        return water_id
