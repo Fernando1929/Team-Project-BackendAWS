@@ -67,6 +67,8 @@ class SurvivorDAO:
         cursor = self.cnx.cursor()
         query = "insert into survivor(user_id) values (%s) returning survivorid;"
         cursor.execute(query, (user_id,))
+        query = "SELECT LAST_INSERT_ID()"
+        cursor.execute(query)
         survivor_id = cursor.fetchone()[0]
         self.cnx.commit()
         return survivor_id

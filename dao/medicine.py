@@ -34,6 +34,8 @@ class MedicineDAO:
         ##check if medicine already exists
         query = "insert into medicine (resource_id, med_type, med_quantity) values (%s,%s,%s) "
         cursor.execute(query, (r_id, medicine_type, medicine_quantity,))
+        query = "SELECT LAST_INSERT_ID()"
+        cursor.execute(query)
         med_id = cursor.fetchone()[0]
         self.cnx.commit()
         return med_id

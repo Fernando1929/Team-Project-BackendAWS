@@ -62,24 +62,6 @@ class LeaderDAO:
         for row in cursor:
             result.append(row)
         return result
-        
-    def getLeaderByEmail(self,Leader_email):
-        cursor = self.cnx.cursor()
-        query = "select user_id, Leader_id, user_firstname, user_lastname, user_date_birth, user_email, phone_id, user_phone from Leader natural inner join users natural inner join user_phone where user_email = %s"
-        cursor.execute(query, (Leader_email,))
-        result = []
-        for row in cursor:
-            result.append(row)
-        return result
-    
-    def getLeaderByPhone(self,Leader_phone):
-        cursor = self.cnx.cursor()
-        query = "select user_id, Leader_id, user_firstname, user_lastname, user_date_birth, user_email, phone_id, user_phone from Leader natural inner join users natural inner join user_phone where user_phone = %s"
-        cursor.execute(query, (Leader_phone,))
-        result = []
-        for row in cursor:
-            result.append(row)
-        return result
     
     def getLeadersByDateOfBirth(self,Leader_date_birth):
         cursor = self.cnx.cursor()
@@ -103,9 +85,11 @@ class LeaderDAO:
         cursor = self.cnx.cursor()
         query = "insert into Leader(user_id) values (%s) returning Leader_id"
         cursor.execute(query, (user_id,))
-        Leader_id = cursor.fetchone()[0]
+        query = "SELECT LAST_INSERT_ID()"
+        cursor.execute(query)
+        leader_id = cursor.fetchone()[0]
         self.cnx.commit()
-        return Leader_id
+        return leader_id
 
     # There is nothing to update in customer table. We only need to get the user id to do the update.
     def update(self, Leader_id):

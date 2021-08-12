@@ -14,9 +14,11 @@ class UserDAO:
         cursor = self.cnx.cursor()
         query = "insert into users(user_firstname, user_lastname, user_date_birth, user_email) values (%s, %s, %s, %s) returning user_id"
         cursor.execute(query, (user_id, username, password))
-        login_id = cursor.fetchone()[0]
-        self.conn.commit()
-        return login_id
+        query = "SELECT LAST_INSERT_ID()"
+        cursor.execute(query)
+        user_id = cursor.fetchone()[0]
+        self.cnx.commit()
+        return user_id
 
     def update(self, user_id):
         cursor = self.cnx.cursor()

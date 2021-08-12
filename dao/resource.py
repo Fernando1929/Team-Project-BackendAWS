@@ -31,9 +31,11 @@ class resourceDAO:
         cursor = self.cnx.cursor()
         query = "insert into resources (resource_name, resource_availability) values (%s,%s) "
         cursor.execute(query, (resource_name, resource_availability))
-        food_id = cursor.fetchone()[0]
+        query = "SELECT LAST_INSERT_ID()"
+        cursor.execute(query)
+        res_id = cursor.fetchone()[0]
         self.cnx.commit()
-        return food_id
+        return res_id
 
     def update_resource(self, resource_name, resource_availability, r_id):
         cursor = self.cnx.cursor()

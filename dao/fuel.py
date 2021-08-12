@@ -32,6 +32,8 @@ class FuelDAO:
         ##check if fuel already exists
         query = "insert into fuel (resource_id, fuel_type, fuel_quantity) values (%s,%s,%s) "
         cursor.execute(query, (r_id, fuel_type, fuel_quantity,))
+        query = "SELECT LAST_INSERT_ID()"
+        cursor.execute(query)
         fuel_id = cursor.fetchone()[0]
         self.cnx.commit()
         return fuel_id

@@ -40,9 +40,11 @@ class LocationDAO:
         cursor = self.cnx.cursor()
         query = "INSERT INTO address (user_id, addressline, city, state_province, country, zipcode) VALUES (%s, %s, %s, %s, %s, %s) RETURNING address_id"
         cursor.execute(query, (user_id, addressline, city, state_province, country, zipcode))
-        address_id = cursor.fetchone()[0]
+        query = "SELECT LAST_INSERT_ID()"
+        cursor.execute(query)
+        location_id = cursor.fetchone()[0]
         self.cnx.commit()
-        return address_id
+        return location_id
 
     def update(self, address_id, user_id, addressline, city, state_province, country, zipcode):
         cursor = self.cnx.cursor()

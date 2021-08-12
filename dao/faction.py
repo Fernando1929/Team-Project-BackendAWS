@@ -57,6 +57,8 @@ class FactionsDAO:
         cursor = self.cnx.cursor()
         query = "insert into faction(faction_name, faction_population, faction_rating, faction_wealth, faction_territory) values(%s,%s,%s) returning faction_id"
         cursor.execute(query,(faction_name, faction_address, faction_phone))
+        query = "SELECT LAST_INSERT_ID()"
+        cursor.execute(query)
         faction_id = cursor.fetchone()[0]
         self.cnx.commit()
         return faction_id

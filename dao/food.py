@@ -31,6 +31,8 @@ class FoodDAO:
         cursor = self.cnx.cursor()
         query = "insert into food (resource_id, food_category, food_quantity, food_type) values (%s,%s,%s,%s) "
         cursor.execute(query, (r_id, food_category, food_quantity, food_type,))
+        query = "SELECT LAST_INSERT_ID()"
+        cursor.execute(query)
         food_id = cursor.fetchone()[0]
         self.cnx.commit()
         return food_id

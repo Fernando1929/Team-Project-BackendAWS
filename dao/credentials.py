@@ -12,8 +12,10 @@ class CredentialsDAO:
 
     def insert(self, user_id, username, password):
         cursor = self.cnx.cursor()
-        query = "INSERT INTO credentials (user_id, username, password) VALUES (%s, %s, %s) RETURNING cred_id"
+        query = "INSERT INTO credentials (user_id, username, password) VALUES (%s, %s, %s)"
         cursor.execute(query, (user_id, username, password))
+        query = "SELECT LAST_INSERT_ID()"
+        cursor.execute(query)
         cred_id = cursor.fetchone()[0]
         self.cnx.commit()
         return cred_id

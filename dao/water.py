@@ -32,6 +32,8 @@ class WaterDAO:
         ##check if water already exists
         query = "insert into water (resource_id, water_quantity, water_container, water_type) values (%s,%s,%s,%s)"
         cursor.execute(query, (r_id, water_quantity, water_container, water_type))
+        query = "SELECT LAST_INSERT_ID()"
+        cursor.execute(query)
         water_id = cursor.fetchone()[0]
         self.cnx.commit()
         return water_id
