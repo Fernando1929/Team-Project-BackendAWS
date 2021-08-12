@@ -10,7 +10,7 @@ from handler.credentials import CredentialsHandler
 from handler.survivor import SurvivorHandler
 from handler.faction import FactionHandler
 from handler.location import LocationHandler
-from handler.leader import LeaderDAO
+from handler.leader import LeaderHandler
 from handler.resources import Resource
 from handler.fuel import Fuel
 from handler.food import Food
@@ -185,7 +185,7 @@ def getSurvivorById(survivor_id):
 ################################## Leader routes ##################################
 @app.route("/register/leader", methods=['POST'])
 def registerLeader():
-    return SurvivorHandler().insertLeader(request.json)
+    return LeaderHandler().insertLeader(request.json)
 
 @app.route("/leader", methods=['GET'])
 def getAllLeaders():

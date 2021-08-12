@@ -48,7 +48,7 @@ class FactionsDAO:
 
     def getFactionByLeaderId(self, leader_id):
         cursor = self.cnx.cursor()
-        query = "Select faction_id, faction_name, faction_population, faction_rating, faction_wealth, faction_territory from faction Natural Join faction_leader where leader_id = %s"
+        query = "Select faction_id, faction_name, faction_population, faction_rating, faction_wealth, faction_territory, leader_id from faction Natural Join faction_leader where leader_id = %s"
         cursor.execute(query,(leader_id,))
         result = cursor.fetchone()
         return result

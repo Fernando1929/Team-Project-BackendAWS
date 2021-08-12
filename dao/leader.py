@@ -72,10 +72,10 @@ class LeaderDAO:
             result.append(row)
         return result
 
-    def getLeadersByCompanyId(self, company_id):
+    def getLeadersByFactionId(self, faction_id):
         cursor = self.cnx.cursor()
-        query = "select user_id, Leader_id, user_firstname, user_lastname, user_date_birth, user_email, phone_id, user_phone from Leader natural inner join users natural inner join user_phone natural inner join represents WHERE company_id = %s"
-        cursor.execute(query, (company_id,))
+        query = "select user_id, Leader_id, user_firstname, user_lastname, user_date_birth, user_email, phone_id, user_phone from faction_leader natural join users natural inner join user_phone natural inner join represents WHERE faction_id = %s"
+        cursor.execute(query, (faction_id,))
         result = []
         for row in cursor:
             result.append(row)
@@ -83,7 +83,7 @@ class LeaderDAO:
 
     def insert(self, user_id):
         cursor = self.cnx.cursor()
-        query = "insert into Leader(user_id) values (%s) returning Leader_id"
+        query = "insert into faction_leader(user_id) values (%s)"
         cursor.execute(query, (user_id,))
         query = "SELECT LAST_INSERT_ID()"
         cursor.execute(query)

@@ -5,13 +5,15 @@ from dao.faction import FactionsDAO
 
 class LeaderHandler:
 
-    def build_leader_attributes(self, user_id, leader_id, leader_firstname, leader_lastname, leader_date_birth, leader_email, leader_phone_id, leader_phone):
+    # leader_id, leader_firstname, leader_lastname, leader_date_birth, leader_status
+    def build_leader_attributes(self, user_id, leader_id, leader_firstname, leader_lastname, leader_date_birth, leader_status):
         result = {}
         result['user_id'] = user_id
         result['leader_id'] = leader_id 
         result['leader_firstname'] = leader_firstname
         result['leader_lastname'] = leader_lastname
         result['leader_date_birth'] = leader_date_birth
+        result['leader_status'] = leader_status
         return result
 
     def build_leader_dict(self, row):
@@ -34,39 +36,39 @@ class LeaderHandler:
         result['resource_price'] = row[6]
         return result
 
-    def getAllleaders(self):
-        dao = leaderDAO()
-        result = dao.getAllleaders()
+    def getAllLeader(self):
+        dao = LeaderDAO()
+        result = dao.getAllLeaders()
         result_list = []
         for row in result:
             result = self.build_leader_dict(row)
             result_list.append(result)
         return jsonify(leaders = result_list)
 
-    def getleaderById(self, leader_id):
-        dao = leaderDAO()
-        row = dao.getleaderById(leader_id)
+    def getLeaderById(self, leader_id):
+        dao = LeaderDAO()
+        row = dao.getLeaderById(leader_id)
         if not row:
             return jsonify(Error = "leader Not Found"), 404
         else:
             leader = self.build_leader_dict(row)
             return jsonify(leader = leader)
     
-    def getleadersByCompanyId(self, company_id):
-        company_dao = CompanyDAO()
-        if not company_dao.getCompanyById(company_id):
-            return jsonify(Error = "Company Not Found"), 404
+    def getleadersByFactionId(self, company_id):
+        faction_dao = FactionDAO()
+        if not faction_dao.getFactionById(company_id):
+            return jsonify(Error = "Faction Not Found"), 404
         else:
-            leader_dao = leaderDAO()
+            leader_dao = LeaderDAO()
             result_list = []
-            leader_list = leader_dao.getleadersByCompanyId(company_id)
+            leader_list = Leader_dao.getleadersByFactionId(company_id)
             for row in leader_list:
                 result = self.build_leader_dict(row)
                 result_list.append(result)
             return jsonify(leaders = result_list)
 
-    def getAllleaderResources(self, leader_id):
-        dao = leaderDAO()
+    def getAllLeaderResources(self, leader_id):
+        dao = LeaderDAO()
         result = dao.getAllleaderResources(leader_id)
         result_list = []
         for row in result:
@@ -74,13 +76,13 @@ class LeaderHandler:
             result_list.append(result)
         return jsonify(Resources = result_list)
 
-    def searchleaders(self, args):
+    def searchLeaders(self, args):
         leader_firstname = args.get('leader_firstname')
         leader_lastname = args.get("leader_lastname")
         leader_email = args.get('leader_email')
         leader_phone = args.get('leader_phone')
         leader_date_birth = args.get('leader_date_birth')
-        dao = leaderDAO()
+        dao = LeaderDAO()
         leader_list = []
         if (len(args) == 2) and leader_firstname and leader_lastname:
             leader_list = dao.getleadersByFirstnameAndLastname(leader_firstname , leader_lastname)
@@ -102,27 +104,24 @@ class LeaderHandler:
             result_list.append(result)
         return jsonify(leaders = result_list)
 
-    def insertleader(self, json):
+    def insertLeader(self, json):
         leader_firstname = json['leader_firstname']
         leader_lastname = json['leader_lastname']
         leader_date_birth = json['leader_date_birth']
-        leader_email = json['leader_email']
-        leader_phone = json['leader_phone']
+        leader_status = json['leader_status']
 
-        if leader_firstname and leader_lastname and leader_date_birth and leader_email and leader_phone:
+        if leader_firstname and leader_lastname and leader_date_birth and leader_status:
             dao_user = UserDAO()
-            user_id = dao_user.insert(leader_firstname, leader_lastname, leader_date_birth, leader_email)
-            dao_phone = UserPhoneDAO()
-            leader_phone_id = dao_phone.insert(user_id, leader_phone)
-            dao_leader = leaderDAO()
+            user_id = dao_user.insert(leader_firstname, leader_lastname, leader_date_birth, leader_status)
+            dao_leader = LeaderDAO()
             leader_id = dao_leader.insert(user_id)
-            result = self.build_leader_attributes(user_id, leader_id, leader_firstname, leader_lastname, leader_date_birth, leader_email, leader_phone_id, leader_phone)
+            result = self.build_leader_attributes(user_id, leader_id, leader_firstname, leader_lastname, leader_date_birth, leader_status)
             return jsonify(leader = result), 201
         else:
             return jsonify(Error = "Unexpected attributes in post request"), 400
 
-    def deleteleader(self, leader_id):
-        leader_dao = leaderDAO()
+    def deleteLeader(self, leader_id):
+        leader_dao = LeaderDAO()
     
         if not leader_dao.getleaderById(leader_id):
             return jsonify(Error = "leader not found."), 404
@@ -134,8 +133,8 @@ class LeaderHandler:
             user_dao.delete(user_id)
             return jsonify(DeleteStatus = "OK"), 200
 
-    def updateleader(self, leader_id, json):
-        dao_leader = leaderDAO()
+    def updateLeader(self, leader_id, json):
+        dao_leader = LeaderDAO()
         dao_user = UserDAO()
         if not dao_leader.getleaderById(leader_id):
             return jsonify(Error = "leader not found."), 404
@@ -148,10 +147,8 @@ class LeaderHandler:
             leader_phone_id = json["leader_phone_id"]
 
             if leader_firstname and leader_lastname and leader_date_birth and leader_email and leader_phone and leader_phone_id:
-                user_id = dao_leader.update(leader_id)
-                dao_user.update(user_id, leader_firstname, leader_lastname, leader_date_birth, leader_email)
-                dao_phone = UserPhoneDAO()
-                dao_phone.update(user_id, leader_phone) 
+                user_id = dao_Leader.update(leader_id)
+                dao_user.update(user_id, leader_firstname, leader_lastname, leader_date_birth, leader_status)
                 result = self.build_leader_attributes(user_id, leader_id, leader_firstname, leader_lastname, leader_date_birth, leader_email, leader_phone_id, leader_phone)
                 return jsonify(leader = result), 200
             else:
