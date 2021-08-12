@@ -1,5 +1,5 @@
 from flask import jsonify
-from dao.medDAO import MedicineDAO
+from dao.medicine import MedicineDAO
 
 
 
@@ -22,7 +22,7 @@ class Med:
         return jsonify("ERROR"), 404
 
     def getMed(self, mid):
-        dao = MedDAO()
+        dao = MedicineDAO()
         med = dao.get_medicine_by_id(mid)
         if med:
             result = self.build_map_dict(med)
@@ -38,21 +38,22 @@ class Med:
             result_list.append(obj)
         return jsonify(Medicine=result_list), 200
     
-    def changeMedicineQuantity(self, med_quantity, med_id):
+    def updateMed(self, json, med_id):
         dao = MedicineDAO()
-        check = dao.get_medicine_by_id(med_id)
+        check = dao.get_med_by_id(med_id)
         if not check:
             return jsonify("ERROR: Medicine not found"), 404
         else:
-            self.build_map_dict(check)
-            amount = check[2] + med_quantity
-            if med_quantity < 0:
-                if med_quantity <= check[2]:
-                    dao.change_medicine_quantity(amount, med_id)
-                    return jsonify("Medicine quantity updated", {"med_id": med_id, "med_quantity": amount}) 200
-                else:
-                    return jsonify("ERROR: Medicine needed exceeds available"), 406
-            else:
-                dao.change_medicine_quantity(amount, med_id)
-                return jsonify("Medicine quantity updated", {"med_id": med_id, "med_quantity": amount}) 200
+            med_type = json['med_type']
+            med_quantity = json['med_quantity']
+            dao.update_med(med_type, med_quantity, med_id)
+            return jsonify("Medicine updated", {"med_type": med_type, "med_quantity": med_quantity}), 200
+        
+    def deleteMed(self, med_id):
+        dao = MedicineDAO()
+        check = dao.delete_medicine(med_id)
+        if not check:
+            return jsonify("ERROR: Medicine not found"), 404
+        else:
+            return jsonify("Medicine deleted", {"med_id": med_id}), 200
 

@@ -1,5 +1,5 @@
 from flask import jsonify
-from dao.waterDAO import WaterDAO
+from dao.water import WaterDAO
 
 
 
@@ -7,8 +7,8 @@ class Water:
     def build_map_dict(self, row):
         result = {}
         result['resource_id'] = row[0]
-        result['water_container'] = row[1]
-        result['water_quantity'] = row[2]
+        result['water_quantity'] = row[1]
+        result['water_container'] = row[2]
         result['water_type'] = row[3]
         return result
 
@@ -18,7 +18,7 @@ class Water:
         water_quantity = json['water_quantity']
         water_name = json['water_type']
         dao = WaterDAO()
-        fid = dao.insert_water(resource_id, water_container, water_quantity, water_type)
+        fid = dao.insert_water(resource_id, water_quantity, water_container, water_type)
         if fid:
             return jsonify("Added water", {"water_id": fid}), 200
         return jsonify("ERROR"), 404
@@ -40,21 +40,22 @@ class Water:
             result_list.append(obj)
         return jsonify(Water=result_list), 200
     
-    def changeWaterQuantity(self, water_quantity, water_id):
+    def updateWater(self, json, water_id):
         dao = WaterDAO()
-        check = dao.get_water_by_id
+        check = dao.get_water_by_id(water_id)
         if not check:
             return jsonify("ERROR: Water not found"), 404
         else:
-            self.build_map_dict(check)
-            amount = check[2] + water_quantity
-            if water_quantity < 0:
-                if amount >= 0:
-                    dao.change_water_quantity(amount, water_id)
-                    return jsonify("Water quantity updated", {"water_id": water_id, "water_quantity": amount}) 200
-                else:
-                    return jsonify("ERROR: Water needed exceeds available"), 406
-            else:
-                dao.change_water_quantity(amount, water_id)
-                return jsonify("Water quantity updated", {"water_id": water_id, "water_quantity": amount}) 200
+            water_container = json['water_cotainer']
+            water_quantity = json['water_quantity']
+            water_type = json['water_type']
+            dao.update_water(water_id, water_quantity, water_container, water_type)
+            return jsonify("Water updated", {"water_type": water_type, "water_quantity": water_quantity}), 200
 
+    def deleteWater(self, water_id):
+        dao = WaterDAO()
+        check = dao.delete_water(water_id)
+        if not check:
+            return jsonify("ERROR: Water not found"), 404
+        else:
+            return jsonify("Water deleted", {"water_id": water_id}), 200

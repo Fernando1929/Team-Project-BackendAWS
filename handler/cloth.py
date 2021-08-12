@@ -1,5 +1,5 @@
 from flask import jsonify
-from dao.clothDAO import ClothDAO
+from dao.cloth import ClothDAO
 
 
 
@@ -13,7 +13,7 @@ class Cloth:
 
     def createCloth(self, json):
         resource_id = json['resource_id']
-        cloth_name = json['cloth_type']
+        cloth_type = json['cloth_type']
         cloth_quantity = json['cloth_quantity']
         dao = ClothDAO()
         cid = dao.insert_cloth(resource_id, cloth_type, cloth_quantity)
@@ -38,21 +38,21 @@ class Cloth:
             result_list.append(obj)
         return jsonify(Cloth=result_list), 200
     
-    def changeClothQuantity(self, cloth_quantity, cloth_id):
+    def updateCloth(self, json, cloth_id):
         dao = ClothDAO()
-        check = dao.get_cloth_by_id
+        check = dao.get_cloth_by_id(cloth_id)
         if not check:
             return jsonify("ERROR: Cloth not found"), 404
         else:
-            self.build_map_dict(check)
-            amount = check[2] + cloth_quantity
-            if cloth_quantity < 0:
-                if cloth_quantity <= check[2]:
-                    dao.change_cloth_quantity(amount, cloth_id)
-                    return jsonify("Cloth quantity updated", {"cloth_id": cloth_id, "cloth_quantity": amount}) 200
-                else:
-                    return jsonify("ERROR: Cloth needed exceeds available"), 406
-            else:
-                dao.change_cloth_quantity(amount, cloth_id)
-                return jsonify("Cloth quantity updated", {"cloth_id": cloth_id, "cloth_quantity": amount}) 200
+            cloth_type = json['cloth_type']
+            cloth_quantity = json['cloth_quantity']
+            dao.update_cloth(cloth_type, cloth_quantity, cloth_id)
+            return jsonify("Cloth updated", {"cloth_type": cloth_type, "cloth_quantity": amount}), 200
 
+    def deleteCloth(self, cloth_id):
+        dao = ClothDAO()
+        check = dao.delete_food(cloth_id)
+        if not check:
+            return jsonify("ERROR: Cloth not found"), 404
+        else:
+            return jsonify("Cloth deleted", {"cloth_id": cloth_id}), 200

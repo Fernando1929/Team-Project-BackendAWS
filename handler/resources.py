@@ -1,6 +1,5 @@
 from flask import jsonify
-from dao.resourceDAO import ResourceDAO
-from model.user import UserDAO
+from dao.resource import ResourceDAO
 
 
 class Resource:
@@ -37,19 +36,16 @@ class Resource:
             result_list.append(obj)
         return jsonify(Resources=result_list), 200
     
-    def changeResourceAvailability(self, rid):
+    def updateResource(self, json, rid):
         dao = ResourceDAO()
         check = dao.get_resource_by_id(rid)
         if not check:
             return jsonify("ERROR: not a resource"), 404
         else:
-            self.build_map_dict(check)
-            if check[2]
-                dao.change_resource_availability(0, rid)
-                return jsonify("Resource is no longer available", {"resource_id": rid}) 200
-            else:
-                dao.change_resource_availability(1, rid)
-                return jsonify("Resource is now available", {"resource_id": rid}) 200
+            resource_name = json["resource_name"]
+            resource_availability = json["resource_availability"]
+            dao.update_resource(resource_name, resource_availability, rid)
+            return jsonify("Resource updated", {"resource_id": rid}), 200
     
     def deleteResource(self, rid):
         dao = ResourceDAO()
@@ -57,5 +53,5 @@ class Resource:
         if not check:
             return jsonify("ERROR: not a resource"), 404
         else:
-            return jsonify("Resource deleted", {"resource_id": rid}) 200
+            return jsonify("Resource deleted", {"resource_id": rid}), 200
 

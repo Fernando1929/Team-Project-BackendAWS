@@ -1,5 +1,5 @@
 from flask import jsonify
-from dao.fuelDAO import FuelDAO
+from dao.fuel import FuelDAO
 
 
 
@@ -38,23 +38,17 @@ class Fuel:
             result_list.append(obj)
         return jsonify(Fuel=result_list), 200
     
-    def changeFuelQuantity(self, fuel_quantity, fuel_id):
+    def updateFuel(self, json, fuel_id):
         dao = FuelDAO()
         check = dao.get_fuel_by_id(fuel_id)
         if not check:
             return jsonify("ERROR: Fuel not found"), 404
         else:
-            self.build_map_dict(check)
-            amount = check[2] + fuel_quantity
-            if fuel_quantity < 0:
-                if fuel_quantity <= check[2]:
-                    dao.change_fuel_quantity(amount, fuel_id)
-                    return jsonify("Fuel quantity updated", {"fuel_id": fuel_id, "fuel_quantity": amount}) 200
-                else:
-                    return jsonify("ERROR: Fuel needed exceeds available"), 406
-            else:
-                dao.change_fuel_quantity(amount, fuel_id)
-                return jsonify("Fuel quantity updated", {"fuel_id": fuel_id, "fuel_quantity": amount}) 200
+            fuel_type = json['fuel_type']
+            fuel_quantity = json['fuel_quantity']
+            dao.update_fuel(fuel_type, fuel_quantity, fuel_id)
+            return jsonify("Fuel updated", {"fuel_type": fuel_type, "fuel_quantity": fuel_quantity}), 200
+
     
     def deleteFuel(self, fuel_id):
         dao = FuelDAO()
@@ -62,5 +56,5 @@ class Fuel:
         if not check:
             return jsonify("ERROR: Fuel not found"), 404
         else:
-            return jsonify("Fuel deleted", {"fuel_id": fuel_id}) 200
+            return jsonify("Fuel deleted", {"fuel_id": fuel_id}), 200
 

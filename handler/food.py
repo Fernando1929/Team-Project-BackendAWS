@@ -1,5 +1,5 @@
 from flask import jsonify
-from dao.foodDAO import FoodDAO
+from dao.food import FoodDAO
 
 
 class Food:
@@ -39,21 +39,23 @@ class Food:
             result_list.append(obj)
         return jsonify(Food=result_list), 200
     
-    def changeFoodQuantity(self, food_quantity, food_id):
+    def updateFood(self, json, food_id):
         dao = FoodDAO()
         check = dao.get_food_by_id(food_id)
         if not check:
             return jsonify("ERROR: Food not found"), 404
         else:
-            self.build_map_dict(check)
-            amount = check[2] + food_quantity
-            if food_quantity < 0:
-                if food_quantity <= check[2]:
-                    dao.change_food_quantity(amount, food_id)
-                    return jsonify("food quantity updated", {"food_id": food_id, "food_quantity": amount}) 200
-                else:
-                    return jsonify("ERROR: Food needed exceeds available"), 406
-            else:
-                dao.change_food_quantity(amount, food_id)
-                return jsonify("Food quantity updated", {"food_id": food_id, "food_quantity": amount}) 200
+            food_category = json['food_category']
+            food_type = json['food_type']
+            food_quantity = json['food_quantity']
+            dao.update_food(food_category, food_quantity, food_type, food_id)
+            return jsonify("Food updated", {"food_type": food_type, "food_quantity": food_quantity}), 200
+
+    def deleteFood(self, food_id):
+        dao = FoodDAO()
+        check = dao.delete_food(food_id)
+        if not check:
+            return jsonify("ERROR: Food not found"), 404
+        else:
+            return jsonify("Food deleted", {"food_id": food_id}), 200
 
