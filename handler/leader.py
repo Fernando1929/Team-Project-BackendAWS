@@ -12,9 +12,6 @@ class LeaderHandler:
         result['leader_firstname'] = leader_firstname
         result['leader_lastname'] = leader_lastname
         result['leader_date_birth'] = leader_date_birth
-        result['leader_email'] = leader_email
-        result['leader_phone_id'] = leader_phone_id
-        result['leader_phone'] = leader_phone
         return result
 
     def build_leader_dict(self, row):
@@ -24,9 +21,6 @@ class LeaderHandler:
         result['leader_firstname'] = row[2]
         result['leader_lastname'] = row[3]
         result['leader_date_birth'] = row[4]
-        result['leader_email'] = row[5]
-        result['leader_phone_id'] = row[6]
-        result['leader_phone'] = row[7]
         return result 
 
     def build_resource_dict(self, row):
@@ -85,7 +79,7 @@ class LeaderHandler:
         leader_lastname = args.get("leader_lastname")
         leader_email = args.get('leader_email')
         leader_phone = args.get('leader_phone')
-        suppplier_date_birth = args.get('leader_date_birth')
+        leader_date_birth = args.get('leader_date_birth')
         dao = leaderDAO()
         leader_list = []
         if (len(args) == 2) and leader_firstname and leader_lastname:

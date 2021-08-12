@@ -176,6 +176,31 @@ def getSurvivorById(survivor_id):
 
 ################################## Survivor routes ##################################
 
+################################## Leader routes ##################################
+@app.route("/register/leader", methods=['POST'])
+def registerLeader():
+    return SurvivorHandler().insertLeader(request.json)
+
+@app.route("/leader", methods=['GET'])
+def getAllLeaders():
+    if not request.args:
+        return LeaderHandler().getAllLeader()
+    else:
+        return LeaderHandler().searchLeaders(request.args)
+
+@app.route('/leader/<int:leader_id>', methods=['GET', 'PUT', 'DELETE'])
+def getLeaderById(leader_id):
+    if request.method == 'GET':
+        return LeaderHandler().getLeaderById(leader_id)
+    elif request.method == 'PUT':
+        return LeaderHandler().updateLeader(leader_id, request.json)
+    elif request.method == 'DELETE':
+        return LeaderHandler().deleteLeader(leader_id)
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+################################## Leader routes ##################################
+
 ################################## Faction routes ##################################
 
 @app.route('/factions', methods = ['GET','POST'])
@@ -200,7 +225,7 @@ def getFactionById(faction_id):
         return jsonify(Error = "Method not allowed"), 405
 
 @app.route('/faction_leader/<int:faction_leader_id>/faction', methods = ['GET'])
-def getFactionBySupplierId(faction_leader_id):
+def getFactionByLeaderId(faction_leader_id):
     return FactionHandler().getFactionByLeaderId(faction_leader_id)
 
 ################################## Faction routes ##################################

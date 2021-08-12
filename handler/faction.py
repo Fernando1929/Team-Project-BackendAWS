@@ -43,14 +43,14 @@ class FactionHandler:
             order = self.build_faction_dict(row)
             return jsonify(faction = order)
 
-    def getFactionBySupplierId(self, supplier_id):
+    def getFactionByLeaderId(self, leader_id):
         leader_dao = LeaderDAO()
-        if not leader_dao.getSupplierById(supplier_id):
-            return jsonify(Error = "Supplier Not Found"), 404
+        if not leader_dao.getLeaderById(leader_id):
+            return jsonify(Error = "Leader Not Found"), 404
         else:
             faction_dao = FactionsDAO()
             result_list = []
-            faction_list = faction_dao.getFactionBySupplierId(supplier_id)
+            faction_list = faction_dao.getFactionByLeaderId(leader_id)
             for row in faction_list:
                 result = self.build_faction_dict(row)
                 result_list.append(result)
