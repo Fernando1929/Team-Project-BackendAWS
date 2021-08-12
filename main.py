@@ -203,7 +203,7 @@ def getLeaderById(leader_id):
 
 ################################## Faction routes ##################################
 
-@app.route('/factions', methods = ['GET','POST'])
+@app.route('/faction', methods = ['GET','POST'])
 def getAllFactions():
     if request.method == 'POST':
         return FactionHandler().insertFaction(request.json)

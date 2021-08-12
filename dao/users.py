@@ -10,10 +10,10 @@ class UserDAO:
                             host = mysql_config['DB_WEBSERVER'],
                             database = mysql_config['DB_DATABASE'])
 
-    def insert(self, user_id, username, password):
+    def insert(self, user_firstname, user_lastname, user_date_birth, user_status):
         cursor = self.cnx.cursor()
-        query = "insert into users(user_firstname, user_lastname, user_date_birth, user_email) values (%s, %s, %s, %s) returning user_id"
-        cursor.execute(query, (user_id, username, password))
+        query = "insert into users(user_firstname, user_lastname, user_date_birth, user_status) values (%s, %s, %s, %s)"
+        cursor.execute(query, (user_firstname, user_lastname, user_date_birth, user_status))
         query = "SELECT LAST_INSERT_ID()"
         cursor.execute(query)
         user_id = cursor.fetchone()[0]
@@ -22,7 +22,7 @@ class UserDAO:
 
     def update(self, user_id):
         cursor = self.cnx.cursor()
-        query = "update users set user_firstname = %s, user_lastname = %s, user_date_birth = %s, user_email = %s where user_id = %s returning user_id"
+        query = "update users set user_firstname = %s, user_lastname = %s, user_date_birth = %s, user_email = %s where user_id = %s"
         cursor.execute(query, (user_id, username, password, login_id,))
         login_id = cursor.fetchone()[0]
         self.conn.commit()

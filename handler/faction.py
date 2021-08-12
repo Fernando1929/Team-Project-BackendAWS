@@ -4,20 +4,21 @@ from dao.leader import LeaderDAO
 
 class FactionHandler:
 
-    #faction_id, faction_name, faction_population, faction_rating, faction_wealth, faction_territory
+    # leader_id, faction_name, faction_population, faction_rating, faction_wealth, faction_territory
     def build_faction_dict(self, row):
         result = {}
         result['faction_id'] = row[0]
-        result['faction_name'] = row[1]
-        result['faction_population'] = row[2] 
-        result['faction_rating'] = row[3]
-        result['faction_wealth'] = row[4] 
-        result['faction_territory'] = row[5]
+        result['leader_id'] = row[1]
+        result['faction_name'] = row[2]
+        result['faction_population'] = row[3] 
+        result['faction_rating'] = row[4]
+        result['faction_wealth'] = row[5] 
+        result['faction_territory'] = row[6]
         return result
 
-    def build_faction_attributes(self, faction_id, faction_name, faction_address, faction_phone):
+    def build_faction_attributes(self, faction_id, leader_id, faction_name, faction_population, faction_rating, faction_wealth, faction_territory):
         result = {}
-        result['faction_id'] = faction_id
+        result['leader_id'] = leader_id
         result['faction_name'] = faction_name
         result['faction_population'] = faction_population 
         result['faction_rating'] = faction_rating
@@ -77,14 +78,17 @@ class FactionHandler:
         return jsonify(faction = result_list)
 
     def insertFaction(self, json):
+        leader_id = json['leader_id']
         faction_name = json['faction_name']
-        faction_address = json['faction_address']
-        faction_phone = json['faction_phone']
+        faction_population = json['faction_population']
+        faction_rating = json['faction_rating']
+        faction_wealth = json['faction_wealth']
+        faction_territory = json['faction_territory']
 
-        if faction_name and faction_address and faction_phone:
+        if leader_id and faction_name and faction_population and faction_rating and faction_wealth and faction_territory:
             dao = FactionsDAO()
-            faction_id = dao.insert(faction_name, faction_address, faction_phone)
-            json = self.build_faction_attributes(faction_id, faction_name, faction_address, faction_phone)
+            faction_id = dao.insert(leader_id, faction_name, faction_population, faction_rating, faction_wealth, faction_territory)
+            json = self.build_faction_attributes(faction_id, leader_id, faction_name, faction_population, faction_rating, faction_wealth, faction_territory)
             return jsonify(faction = json), 201
         else:
             return jsonify(Error = "Unexpected attributes in post request"), 400

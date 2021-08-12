@@ -5,22 +5,25 @@ from dao.users import UserDAO
 
 class SurvivorHandler:
     
+    # survivor_id, user_id, survivor_firstname, survivor_lastname, survivor_date_birth, survivor_status
     def build_survivor_dict(self, row):
         result = {}
-        result['user_id'] = row[0]
-        result['survivor_id'] = row[1]
+        result['survivor_id'] = row[0]
+        result['user_id'] = row[1]
         result['survivor_firstname'] = row[2]
         result['survivor_lastname'] = row[3]
         result['survivor_date_birth'] = row[4]
+        result['survivor_status'] = row[4]
         return result
 
-    def build_survivor_attributes(self, survivor_id, user_id, survivor_firstname, survivor_lastname, survivor_date_birth):
+    def build_survivor_attributes(self, survivor_id, user_id, survivor_firstname, survivor_lastname, survivor_date_birth, survivor_status):
         result = {}
         result['survivor_id'] = survivor_id
         result['user_id'] = user_id
         result['survivor_firstname'] = survivor_firstname
         result['survivor_lastname'] = survivor_lastname
         result['survivor_date_birth'] = survivor_date_birth
+        result['survivor_status'] = survivor_status
         return result
 
     def getAllSurvivors(self):
@@ -41,7 +44,7 @@ class SurvivorHandler:
             survivor = self.build_survivor_dict(row)
             return jsonify(survivor = survivor)
 
-    def searchsurvivors(self, args):
+    def searchSurvivors(self, args):
         survivor_firstname = args.get("survivor_firstname")
         survivor_lastname = args.get("survivor_lastname")
         survivor_email = args.get("survivor_email")
@@ -69,24 +72,23 @@ class SurvivorHandler:
             result_list.append(result)
         return jsonify(survivors = result_list)
 
-    def insertsurvivor(self, json):
+    def insertSurvivor(self, json):
         survivor_firstname = json['survivor_firstname']
         survivor_lastname = json['survivor_lastname']
         survivor_date_birth = json['survivor_date_birth']
-        
-        if survivor_firstname and survivor_lastname and survivor_date_birth and survivor_email and survivor_phone:
+        survivor_status = json['survivor_status']
+        print(survivor_firstname, survivor_lastname, survivor_date_birth, survivor_status)
+        if survivor_firstname and survivor_lastname and survivor_date_birth and survivor_status:
             user_dao = UserDAO()
-            user_id = user_dao.insert(survivor_firstname, survivor_lastname, survivor_date_birth, survivor_email)
-            dao_phone = UserPhoneDAO()
-            survivor_phone_id = dao_phone.insert(user_id, survivor_phone)         
+            user_id = user_dao.insert(survivor_firstname, survivor_lastname, survivor_date_birth, survivor_status)       
             survivor_dao = SurvivorDAO()
             survivor_id = survivor_dao.insert(user_id)
-            result = self.build_survivor_attributes(survivor_id, user_id, survivor_firstname, survivor_lastname, survivor_date_birth, survivor_email, survivor_phone_id, survivor_phone)
+            result = self.build_survivor_attributes(survivor_id, user_id, survivor_firstname, survivor_lastname, survivor_date_birth, survivor_status)
             return jsonify(survivor = result), 201
         else:
             return jsonify(Error = "Unexpected attributes in post request"), 400
 
-    def updatesurvivor(self, survivor_id, json):
+    def updateSurvivor(self, survivor_id, json):
         survivor_dao = SurvivorDAO()
         if not survivor_dao.getSurvivorById(survivor_id):
             return jsonify(Error = "survivor not found."), 404
@@ -109,7 +111,7 @@ class SurvivorHandler:
             else:
                 return jsonify(Error = "Unexpected attributes in update request"), 400
 
-    def deletesurvivor(self, survivor_id):
+    def deleteSurvivor(self, survivor_id):
         survivor_dao = SurvivorDAO()
         if not survivor_dao.getSurvivorById(survivor_id):
             return jsonify(Error = "survivor not found."), 404
