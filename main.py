@@ -28,39 +28,39 @@ def greeting():
 
 ## translate to handler and dao
 # Register function 
-@app.route("/register", methods = ['POST'])
-def register():
+# @app.route("/register", methods = ['POST'])
+# def register():
 
-    # Connect database
-    conn = mysql.connect()
-    cursor = conn.cursor()
+#     # Connect database
+#     conn = mysql.connect()
+#     cursor = conn.cursor()
 
-    # Read data from GUI
-    data = request.get_json()["newUser"]
+#     # Read data from GUI
+#     data = request.get_json()["newUser"]
     
-    # Saving values
-    username = data['username']
-    password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
-    status = "new"
+#     # Saving values
+#     username = data['username']
+#     password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
+#     status = "new"
 
-    # Check if the username is taken 
-    query = "SELECT * from users where username = %s"
-    cursor.execute(query,(username))
-    result = cursor.fetchone()
+#     # Check if the username is taken 
+#     query = "SELECT * from users where username = %s"
+#     cursor.execute(query,(username))
+#     result = cursor.fetchone()
 
-    print(result)
+#     print(result)
 
-    if(result == None):
-        # Save the user in the database
-        query="INSERT INTO users (username, password, status) VALUES(%s, %s, %s)"
-        cursor.execute(query,(username, password, status))
+#     if(result == None):
+#         # Save the user in the database
+#         query="INSERT INTO users (username, password, status) VALUES(%s, %s, %s)"
+#         cursor.execute(query,(username, password, status))
 
-        conn.commit()
+#         conn.commit()
 
-        return jsonify({'status': 'Registered'}), 200
+#         return jsonify({'status': 'Registered'}), 200
 
-    else:
-        return jsonify({'msg': '*The username already exist.'}), 400
+#     else:
+#         return jsonify({'msg': '*The username already exist.'}), 400
 
 
 # # Login function
@@ -100,9 +100,9 @@ def register():
 
 ################################## Credentials routes ##################################
 
-@app.route("/login", methods=['POST'])
+@app.route("/register", methods=['POST'])
 def addlogin():
-    return CredentialsHandler().insertLogin(request.json)
+    return CredentialsHandler().insertCredentials(request.json)
 
 @app.route("/login/<int:cred_id>", methods=['GET', 'PUT'])
 def getLoginById(cred_id):

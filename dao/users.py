@@ -30,7 +30,7 @@ class UserDAO:
         cursor = self.cnx.cursor()
         query = "select user_id, user_firstname, user_lastname, user_date_birth from users where user_id = %s"
         cursor.execute(query,(user_id,))
-        result =  cursor.fetchone()[0]
+        result =  cursor.fetchone()
         return result
 
     def delete(self, user_id):

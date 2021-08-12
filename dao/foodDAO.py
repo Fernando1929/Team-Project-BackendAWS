@@ -1,17 +1,19 @@
 from db_config.dbconfig import mysql_config
-import psycopg2
+import mysql.connector
 
 
 class FoodDAO:
     def __init__(self):
-        connection_url = "dbname=%s user=%s password=%s port=%s host='%s'" % (
-            pg_config['dbname'], pg_config['user'], pg_config['password'], pg_config['dbport'], pg_config['host'])
-        print("connection url:  ", connection_url)
-        self.conn = psycopg2.connect(connection_url)
+        self.cnx = mysql.connector.connect(
+            user = mysql_config['DB_USERNAME'], 
+            password = mysql_config['DB_PASSWORD'], 
+            host = mysql_config['DB_WEBSERVER'], 
+            database = mysql_config['DB_DATABASE']
+        )
 
     def get_all_food(self):
-        cursor = self.conn.cursor()
-        query = "select food_category, food_quantity, food_type from food;"
+        cursor = self.cnx.cursor()
+        query = "select food_category, food_quantity, food_type from food "
         cursor.execute(query)
         result = []
         for row in cursor:
@@ -19,32 +21,40 @@ class FoodDAO:
         return result
 
     def get_food_by_id(self, f_id):
-        cursor = self.conn.cursor()
-        query = "select food_category, food_quantity, food_type from food where food_id = %s;"
+        cursor = self.cnx.cursor()
+        query = "select food_category, food_quantity, food_type from food where food_id = %s "
         cursor.execute(query, (f_id,))
         result = cursor.fetchone()
         return result
 
     def insert_food(self, r_id, food_category, food_quantity, food_type):
-        cursor = self.conn.cursor()
-        query = "insert into food (resource_id, food_category, food_quantity, food_type) values (%s,%s,%s,%s) returning food_id;"
+        cursor = self.cnx.cursor()
+        query = "insert into food (resource_id, food_category, food_quantity, food_type) values (%s,%s,%s,%s) "
         cursor.execute(query, (r_id, food_category, food_quantity, food_type,))
         food_id = cursor.fetchone()[0]
-        self.conn.commit()
+        self.cnx.commit()
         return food_id
 
     def change_food_quantity(self, food_quantity, f_id):
-        cursor = self.conn.cursor()
+        cursor = self.cnx.cursor()
         ##add check to verify if the resource even exists.
-        query = "update food set food_quantity=%s where food_id=%s;"
+        query = "update food set food_quantity=%s where food_id=%s "
         cursor.execute(query, (food_quantity, f_id,))
-        self.conn.commit()
+        self.cnx.commit()
         return f_id
 
     def get_food_quantity(self, f_id):
-        cursor = self.conn.cursor()
-        query = "select food_quantity from food where food_id = %s;"
+        cursor = self.cnx.cursor()
+        query = "select food_quantity from food where food_id = %s "
         cursor.execute(query, (f_id,))
         result = cursor.fetchone()
         return result
+
+    def update_food(self, food_category, food_quantity, food_type, f_id):
+        cursor = self.cnx.cursor()
+        ##add check to verify if the resource even exists.
+        query = "update food set food_category=%s, food_quantity=%s, food_type=%s where food_id=%s "
+        cursor.execute(query, (food_category, food_quantity, food_type, f_id,))
+        self.cnx.commit()
+        return f_id
     
