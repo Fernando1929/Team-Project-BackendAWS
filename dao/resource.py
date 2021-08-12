@@ -47,9 +47,8 @@ class ResourceDAO:
     
     def delete_resource(self, r_id):
         cursor = self.cnx.cursor()
-        query =  "delete from resources where resource_id = %s returning resource_id;"
+        query =  "delete from resources where resource_id = %s;"
         cursor.execute(query, (r_id,))
-        resource_id = cursor.fetchone()[0]
         self.cnx.commit()
-        return resource_id
+        return r_id
     

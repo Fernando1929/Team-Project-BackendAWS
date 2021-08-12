@@ -12,7 +12,7 @@ class UserDAO:
 
     def insert(self, user_id, username, password):
         cursor = self.cnx.cursor()
-        query = "insert into users(user_firstname, user_lastname, user_date_birth, user_email) values (%s, %s, %s, %s) returning user_id"
+        query = "insert into users(user_firstname, user_lastname, user_date_birth, user_email) values (%s, %s, %s, %s) returning user_id;"
         cursor.execute(query, (user_id, username, password))
         query = "SELECT LAST_INSERT_ID()"
         cursor.execute(query)
@@ -22,7 +22,7 @@ class UserDAO:
 
     def update(self, user_id):
         cursor = self.cnx.cursor()
-        query = "update users set user_firstname = %s, user_lastname = %s, user_date_birth = %s, user_email = %s where user_id = %s returning user_id"
+        query = "update users set user_firstname = %s, user_lastname = %s, user_date_birth = %s, user_email = %s where user_id = %s returning user_id;"
         cursor.execute(query, (user_id, username, password, login_id,))
         login_id = cursor.fetchone()[0]
         self.conn.commit()
@@ -30,14 +30,14 @@ class UserDAO:
 
     def getUserById(self, user_id):
         cursor = self.cnx.cursor()
-        query = "select user_id, user_firstname, user_lastname, user_date_birth from users where user_id = %s"
+        query = "select user_id, user_firstname, user_lastname, user_date_birth from users where user_id = %s;"
         cursor.execute(query,(user_id,))
         result =  cursor.fetchone()
         return result
 
     def delete(self, user_id):
         cursor =  self.cnx.cursor()
-        query = "delete from users where user_id = %s returning user_id"
+        query = "delete from users where user_id = %s;"
         cursor.execute(query, (user_id,))
         self.conn.commit()
         return user_id

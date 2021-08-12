@@ -47,7 +47,7 @@ class FoodDAO:
     
     def delete_food(self, f_id):
         cursor = self.cnx.cursor()
-        query =  "delete from food where food_id = %s returning food_id;"
+        query =  "delete from food where food_id = %s;"
         cursor.execute(query, (f_id,))
         food_id = cursor.fetchone()[0]
         self.cnx.commit()

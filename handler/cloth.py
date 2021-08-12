@@ -51,8 +51,9 @@ class Cloth:
 
     def deleteCloth(self, cloth_id):
         dao = ClothDAO()
-        check = dao.delete_food(cloth_id)
+        check = dao.get_cloth_by_id(cloth_id)
         if not check:
             return jsonify("ERROR: Cloth not found"), 404
         else:
+            dao.delete_food(cloth_id)
             return jsonify("Cloth deleted", {"cloth_id": cloth_id}), 200

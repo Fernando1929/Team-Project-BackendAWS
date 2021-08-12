@@ -47,7 +47,7 @@ class MedicineDAO:
     
     def delete_medicine(self, m_id):
         cursor = self.cnx.cursor()
-        query =  "delete from medicine where med_id = %s returning med_id;"
+        query =  "delete from medicine where med_id = %s;"
         cursor.execute(query, (m_id,))
         med_id = cursor.fetchone()[0]
         self.cnx.commit()

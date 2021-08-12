@@ -52,9 +52,10 @@ class Fuel:
     
     def deleteFuel(self, fuel_id):
         dao = FuelDAO()
-        check = dao.delete_fuel(fuel_id)
+        check = dao.get_fuel_by_id(fuel_id)
         if not check:
             return jsonify("ERROR: Fuel not found"), 404
         else:
+            dao.delete_fuel(fuel_id)
             return jsonify("Fuel deleted", {"fuel_id": fuel_id}), 200
 

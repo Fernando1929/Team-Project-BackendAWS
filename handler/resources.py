@@ -49,9 +49,10 @@ class Resource:
     
     def deleteResource(self, rid):
         dao = ResourceDAO()
-        check = dao.delete_resource(rid)
+        check = dao.get_resource_by_id(rid)
         if not check:
-            return jsonify("ERROR: not a resource"), 404
+            return jsonify("ERROR: Resource not found"), 404
         else:
+            dao.delete_resource(rid)
             return jsonify("Resource deleted", {"resource_id": rid}), 200
 

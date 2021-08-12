@@ -48,7 +48,7 @@ class ClothDAO:
     
     def delete_cloth(self, c_id):
         cursor = self.cnx.cursor()
-        query =  "delete from cloth where cloth_id = %s returning cloth_id;"
+        query =  "delete from cloth where cloth_id = %s;"
         cursor.execute(query, (c_id,))
         cloth_id = cursor.fetchone()[0]
         self.cnx.commit()

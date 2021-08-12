@@ -44,7 +44,7 @@ class CredentialsDAO:
 
     def delete(self, user_id):
         cursor =  self.cnx.cursor()
-        query =  "DELETE FROM users WHERE user_id = %s returning user_id"
+        query =  "DELETE FROM users WHERE user_id = %s;"
         cursor.execute(query, (user_id,))
         self.cnx.commit()
         return user_id

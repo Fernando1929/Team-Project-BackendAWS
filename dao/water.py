@@ -47,7 +47,7 @@ class WaterDAO:
     
     def delete_water(self, w_id):
         cursor = self.cnx.cursor()
-        query =  "delete from water where water_id = %s returning water_id;"
+        query =  "delete from water where water_id = %s;"
         cursor.execute(query, (w_id,))
         water_id = cursor.fetchone()[0]
         self.cnx.commit()

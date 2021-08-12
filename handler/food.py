@@ -53,9 +53,10 @@ class Food:
 
     def deleteFood(self, food_id):
         dao = FoodDAO()
-        check = dao.delete_food(food_id)
+        check = dao.get_food_by_id(food_id)
         if not check:
             return jsonify("ERROR: Food not found"), 404
         else:
+            dao.delete_food(food_id)
             return jsonify("Food deleted", {"food_id": food_id}), 200
 

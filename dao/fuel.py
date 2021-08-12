@@ -46,7 +46,7 @@ class FuelDAO:
     
     def delete_fuel(self, f_id):
         cursor = self.cnx.cursor()
-        query =  "delete from fuel where fuel_id = %s returning fuel_id;"
+        query =  "delete from fuel where fuel_id = %s;"
         cursor.execute(query, (f_id,))
         fuel_id = cursor.fetchone()[0]
         self.cnx.commit()

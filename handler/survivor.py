@@ -111,10 +111,11 @@ class SurvivorHandler:
 
     def deletesurvivor(self, survivor_id):
         survivor_dao = SurvivorDAO()
-        if not survivor_dao.getSurvivorById(survivor_id):
+        user_id = getSurvivorById(survivor_id)
+        if not user_id:
             return jsonify(Error = "survivor not found."), 404
         else:
-            user_id = survivor_dao.delete(survivor_id)
+            survivor_dao.delete(survivor_id)
             dao_phone = UserPhoneDAO()
             dao_phone.delete(user_id)
             user_dao = UserDAO()

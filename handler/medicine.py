@@ -51,9 +51,10 @@ class Med:
         
     def deleteMed(self, med_id):
         dao = MedicineDAO()
-        check = dao.delete_medicine(med_id)
+        check = dao.get_med_by_id(med_id)
         if not check:
             return jsonify("ERROR: Medicine not found"), 404
         else:
+            dao.delete_medicine(med_id)
             return jsonify("Medicine deleted", {"med_id": med_id}), 200
 

@@ -54,8 +54,9 @@ class Water:
 
     def deleteWater(self, water_id):
         dao = WaterDAO()
-        check = dao.delete_water(water_id)
+        check = dao.get_water_by_id(water_id)
         if not check:
             return jsonify("ERROR: Water not found"), 404
         else:
+            dao.delete_water(water_id)
             return jsonify("Water deleted", {"water_id": water_id}), 200
