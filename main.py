@@ -230,7 +230,7 @@ def getFactionById(faction_id):
     else:
         return jsonify(Error = "Method not allowed"), 405
 
-@app.route('/faction_leader/<int:faction_leader_id>/faction', methods = ['GET'])
+@app.route('/leader/<int:faction_leader_id>/faction', methods = ['GET'])
 def getFactionByLeaderId(faction_leader_id):
     return FactionHandler().getFactionByLeaderId(faction_leader_id)
 
