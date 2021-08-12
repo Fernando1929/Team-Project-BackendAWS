@@ -39,7 +39,7 @@ class Resource:
     
     def changeResourceAvailability(self, rid):
         dao = ResourceDAO()
-        check = dao.get_resource_by_id
+        check = dao.get_resource_by_id(rid)
         if not check:
             return jsonify("ERROR: not a resource"), 404
         else:
@@ -50,4 +50,12 @@ class Resource:
             else:
                 dao.change_resource_availability(1, rid)
                 return jsonify("Resource is now available", {"resource_id": rid}) 200
+    
+    def deleteResource(self, rid):
+        dao = ResourceDAO()
+        check = dao.delete_resource(rid)
+        if not check:
+            return jsonify("ERROR: not a resource"), 404
+        else:
+            return jsonify("Resource deleted", {"resource_id": rid}) 200
 

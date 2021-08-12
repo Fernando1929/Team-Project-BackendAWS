@@ -11,6 +11,7 @@ from handler.survivor import SurvivorHandler
 from handler.faction import FactionHandler
 from handler.location import LocationHandler
 from handler.leader import LeaderDAO
+from handler.resources import Resource
 
 
 app = Flask(__name__)
@@ -204,6 +205,40 @@ def getCompanyBySupplierId(supplier_id):
     return CompanyHandler().getCompanyBySupplierId(supplier_id)
 
 ################################## Faction routes ##################################
+
+################################## Resources routes ##################################
+@app.route('/DRL/resource/<int:resource_id>', methods = ['GET','PUT','DELETE', 'UPDATE'])
+def getResourceById(resource_id):
+    if request.method == 'Get':
+        return Resource().getResource(resource_id)
+    elif request.method == 'PUT':
+        return Resource().createResource(request.json)
+    elif request.method == 'UPDATE':
+        return Resource().changeResourceAvailability(resource_id)
+    elif request.method == 'DELETE':
+        return Resource().deleteResource(resource_id)
+    else:
+        return jsonify(Error = "Method not allowed"), 405
+################################## Resources routes ##################################
+
+################################## Fuel routes ##################################
+@app.route('/DRL/resource/<int:resource_id>/fuel/<int:fuel_id>', methods = ['GET','PUT','DELETE', 'UPDATE'])
+def getResourceById(resource_id):
+    if request.method == 'Get':
+        return Resource().getFuel(resource_id)
+    elif request.method == 'PUT':
+        return Resource().createFuel(request.json)
+    elif request.method == 'UPDATE':
+        return Resource().changeFuelQuantity(request.json, fuel_id)
+    elif request.method == 'DELETE':
+        return Resource().deleteFuel(fuel_id)
+    else:
+        return jsonify(Error = "Method not allowed"), 405
+################################## Fuel routes ##################################
+
+################################## Food routes ##################################
+
+################################## Food routes ##################################
 
 if __name__ == '__main__':
     app.run(debug=True)

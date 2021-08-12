@@ -1,13 +1,14 @@
 from db_config.dbconfig import mysql_config
-import psycopg2
+import mysql.connector
 
 
 class WaterDAO:
-    def __init__(self):
-        connection_url = "dbname=%s user=%s password=%s port=%s host='%s'" % (
-            pg_config['dbname'], pg_config['user'], pg_config['password'], pg_config['dbport'], pg_config['host'])
-        print("connection url:  ", connection_url)
-        self.conn = psycopg2.connect(connection_url)
+    def __init__ (self):
+        self.conn = mysql.connector.connect(
+                            user = mysql_config['DB_USERNAME'], 
+                            password = mysql_config['DB_PASSWORD'],
+                            host = mysql_config['DB_WEBSERVER'],
+                            database = mysql_config['DB_DATABASE'])
 
     def get_all_water(self):
         cursor = self.conn.cursor()
@@ -34,7 +35,7 @@ class WaterDAO:
         self.conn.commit()
         return water_id
 
-    def change_water_quantity(self, (r_id, water_type, water_quantity,)):
+    def change_water_quantity(self, (w_id, water_quantity,)):
         cursor = self.conn.cursor()
         ##add check to verify if the resource even exists.
         query = "update water set water_quantity=%s where water_id=%s;"

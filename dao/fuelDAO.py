@@ -1,13 +1,14 @@
 from db_config.dbconfig import mysql_config
-import psycopg2
+import mysql.connector
 
 
 class FuelDAO:
-    def __init__(self):
-        connection_url = "dbname=%s user=%s password=%s port=%s host='%s'" % (
-            pg_config['dbname'], pg_config['user'], pg_config['password'], pg_config['dbport'], pg_config['host'])
-        print("connection url:  ", connection_url)
-        self.conn = psycopg2.connect(connection_url)
+    def __init__ (self):
+        self.conn = mysql.connector.connect(
+                            user = mysql_config['DB_USERNAME'], 
+                            password = mysql_config['DB_PASSWORD'],
+                            host = mysql_config['DB_WEBSERVER'],
+                            database = mysql_config['DB_DATABASE'])
 
     def get_all_fuel(self):
         cursor = self.conn.cursor()
@@ -48,4 +49,12 @@ class FuelDAO:
         cursor.execute(query, (r_id,))
         result = cursor.fetchone()
         return result
+
+    def delete_fuel(self, f_id):
+        cursor = self.conn.cursor()
+        query =  "delete from fuel where fuel_id = %s returning fuel_id;"
+        cursor.execute(query, (f_id,))
+        fuel_id = cursor.fetchone()[0]
+        self.conn.commit()
+        return fuel_id
     
