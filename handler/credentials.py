@@ -40,8 +40,8 @@ class CredentialsHandler:
             if not row:
                 return jsonify(Error = "Credentials Not Found"), 404
             else:
-                login = self.build_cred_dict(row)
-                return jsonify(Credentials = login)
+                cred = self.build_cred_dict(row)
+                return jsonify(Credentials = cred)
 
     def insertCredentials(self, json):
         user_id = json["user_id"]

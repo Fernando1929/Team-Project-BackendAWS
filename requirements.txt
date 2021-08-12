@@ -1,0 +1,6 @@
+PyJWT
+mysql-connector
+Flask-JWT-Extended
+Flask-Cors
+Flask-Bcrypt
+Flask

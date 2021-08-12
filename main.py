@@ -152,25 +152,25 @@ def getAddressesByUserId(user_id):
 
 ################################## Survivor routes ##################################
 
-@app.route("/DRL/register/Survivor", methods=['POST'])
+@app.route("/register/survivor", methods=['POST'])
 def registerSurvivor():
-    return Survivor_Handler().insertSurvivor(request.json)
+    return SurvivorHandler().insertSurvivor(request.json)
 
-@app.route("/DRL/Survivor", methods=['GET'])
+@app.route("/survivor", methods=['GET'])
 def getAllSurvivors():
     if not request.args:
-        return Survivor_Handler().getAllSurvivors()
+        return SurvivorHandler().getAllSurvivors()
     else:
-        return Survivor_Handler().searchSurvivors(request.args)
+        return SurvivorHandler().searchSurvivors(request.args)
 
-@app.route('/DRL/Survivor/<int:Survivor_id>', methods=['GET', 'PUT', 'DELETE'])
-def getSurvivorById(Survivor_id):
+@app.route('/survivor/<int:survivor_id>', methods=['GET', 'PUT', 'DELETE'])
+def getSurvivorById(survivor_id):
     if request.method == 'GET':
-        return Survivor_Handler().getSurvivorById(Survivor_id)
+        return SurvivorHandler().getSurvivorById(survivor_id)
     elif request.method == 'PUT':
-        return Survivor_Handler().updateSurvivor(Survivor_id, request.json)
+        return SurvivorHandler().updateSurvivor(survivor_id, request.json)
     elif request.method == 'DELETE':
-        return Survivor_Handler().deleteSurvivor(Survivor_id)
+        return SurvivorHandler().deleteSurvivor(survivor_id)
     else:
         return jsonify(Error="Method not allowed."), 405
 
@@ -178,30 +178,30 @@ def getSurvivorById(Survivor_id):
 
 ################################## Faction routes ##################################
 
-@app.route('/DRL/company', methods = ['GET','POST'])
-def getAllCompanies():
+@app.route('/factions', methods = ['GET','POST'])
+def getAllFactions():
     if request.method == 'POST':
-        return CompanyHandler().insertCompany(request.json)
+        return FactionHandler().insertFaction(request.json)
     else :
         if not request.args:
-            return CompanyHandler().getAllCompanies()
+            return FactionHandler().getAllFactions()
         else:
-            return CompanyHandler().searchCompany(request.args)
+            return FactionHandler().searchFaction(request.args)
 
-@app.route('/DRL/company/<int:company_id>', methods = ['GET','PUT','DELETE'])
-def getCompanyById(company_id):
+@app.route('/faction/<int:faction_id>', methods = ['GET','PUT','DELETE'])
+def getFactionById(faction_id):
     if request.method == 'GET':
-        return CompanyHandler().getCompanyById(company_id)
+        return FactionHandler().getFactionById(faction_id)
     elif request.method == 'PUT':
-        return CompanyHandler().updateCompany(company_id, request.json)
+        return FactionHandler().updateFaction(faction_id, request.json)
     elif request.method == 'DELETE':
-        return CompanyHandler().deleteCompany(company_id)
+        return FactionHandler().deleteFaction(faction_id)
     else:
         return jsonify(Error = "Method not allowed"), 405
 
-@app.route('/DRL/supplier/<int:supplier_id>/company', methods = ['GET'])
-def getCompanyBySupplierId(supplier_id):
-    return CompanyHandler().getCompanyBySupplierId(supplier_id)
+@app.route('/faction_leader/<int:faction_leader_id>/faction', methods = ['GET'])
+def getFactionBySupplierId(faction_leader_id):
+    return FactionHandler().getFactionByLeaderId(faction_leader_id)
 
 ################################## Faction routes ##################################
 
