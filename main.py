@@ -124,29 +124,29 @@ def getLoginByUserId(user_id):
 
 ################################## Location routes ##################################
 @app.route("/user/location", methods=['GET', 'POST'])
-def getAllAddresses():
+def getAllLocations():
     if request.method == 'POST':
-        return Location_Handler().insertAddress(request.json)
+        return LocationHandler().insertLocation(request.json)
     else:
         if not request.args:
-            return Location_Handler().getAllAddresses()
+            return LocationHandler().getAllLocations()
         else:
-            return Location_Handler().searchAddresses(request.args)
+            return LocationHandler().searchLocations(request.args)
 
 @app.route("/user/location/<int:location_id>", methods=['GET', 'PUT', 'DELETE'])
-def getAddressById(location_id):
+def getLocationById(location_id):
     if request.method == 'GET':
-        return Location_Handler().getAddressById(location_id)
+        return LocationHandler().getLocationById(location_id)
     elif request.method == 'PUT':
-        return Location_Handler().updateAddress(location_id, request.json)
+        return LocationHandler().updateLocation(location_id, request.json)
     elif request.method == 'DELETE':
-        return Location_Handler().deleteAddress(location_id)
+        return LocationHandler().deleteLocation(location_id)
     else:
         return jsonify(Error="Method not allowed."), 405
 
 @app.route("/user/<int:user_id>/location", methods=['GET'])
-def getAddressesByUserId(user_id):
-    return Location_Handler().getAddressesByUserId(user_id)
+def getLocationsByUserId(user_id):
+    return LocationHandler().getLocationByUserId(user_id)
 
 ################################## Location routes ##################################
 
